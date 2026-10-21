@@ -10,6 +10,7 @@ website:
   repo-url: https://github.com/FieldDataLab/fielddatalab.github.io
   search: true
   page-navigation: false
+  google-analytics: "G-15VZ757XYD"
 
 execute:
   # Code runs on your machine; results are saved in _freeze/ so the publish step needn't rerun it
