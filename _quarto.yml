@@ -1,0 +1,30 @@
+project:
+  type: website
+  render:
+    - "*.qmd"
+
+website:
+  title: "Field Data Lab"
+  description: "Behavioral science, tested on the playing field"
+  site-url: https://fielddatalab.github.io
+  repo-url: https://github.com/FieldDataLab/fielddatalab.github.io
+  search: true
+  page-navigation: false
+
+execute:
+  # Code runs on your machine; results are saved in _freeze/ so the publish step needn't rerun it
+  freeze: auto
+
+lang: en-GB
+
+format:
+  html:
+    theme: cosmo
+    css: assets/fdl.css
+    include-in-header: assets/fonts.html
+    google-scholar: true
+    reference-location: margin
+    fig-cap-location: bottom
+    code-fold: true
+    code-tools: false
+    smooth-scroll: true

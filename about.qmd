@@ -1,0 +1,12 @@
+---
+title: About
+comments: false
+include-before-body: assets/back.html
+---
+
+Field Data Lab tests ideas from behavioral science on sports data. Sport is a good place to study
+decisions: the stakes are real, the people are experienced, and almost everything is recorded.
+
+Each article states its question, its data and its method, and links to the code so the analysis can be rerun.
+
+Written by Anup Walvekar.

@@ -1,0 +1,20 @@
+# Applies to every article in posts/
+author:
+  - name: Anup Walvekar
+    affiliation: Field Data Lab
+citation: true
+license: "CC BY"
+number-sections: true
+toc: true
+toc-location: left
+toc-title: Contents
+title-block-banner: false
+include-before-body: ../assets/back.html
+comments:
+  giscus:
+    repo: FieldDataLab/fielddatalab.github.io
+    category: Announcements
+    mapping: pathname
+    reactions-enabled: true
+    loading: lazy
+    theme: preferred_color_scheme

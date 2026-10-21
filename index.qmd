@@ -1,0 +1,15 @@
+---
+pagetitle: Field Data Lab
+page-layout: custom
+body-classes: fdl-home
+comments: false
+listing:
+  id: articles
+  contents: posts
+  sort: "date desc"
+  date-format: iso
+  template: _listing.ejs
+  feed: false
+include-after-body:
+  - text: <script src="assets/listing.js"></script>
+---

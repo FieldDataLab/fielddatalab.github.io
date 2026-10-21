@@ -1,0 +1,74 @@
+<%
+  // Hand the listing data to assets/listing.js, which builds the page
+  const kw = k => Array.isArray(k) ? k.join(', ') : (k || '');
+  const who = a => [].concat(a || []).map(x => typeof x === 'string' ? x : (x.name && (x.name.literal || x.name)) || '').filter(Boolean).join(', ');
+  const data = items.map(i => ({
+    id: i['article-id'] || '',
+    title: i.title || '',
+    date: String(i.date || '').slice(0, 10),
+    href: i.outputHref || i.path,
+    author: who(i.author) || 'Anup Walvekar',
+    sport: i.sport || '',
+    tags: i.categories || [],
+    abs: i.abstract || i.description || '',
+    kw: kw(i.keywords),
+    mins: parseInt(i['reading-time'], 10) || 1
+  }));
+%>
+```{=html}
+<script id="fdl-data" type="text/plain"><%- encodeURIComponent(JSON.stringify(data)) %></script>
+
+<div class="shell">
+  <div class="rail" role="complementary" aria-label="Site navigation">
+    <a class="brand" href="./">Field Data Lab</a>
+
+    <div class="search" role="search">
+      <label class="label" for="q">Search articles</label>
+      <input id="q" type="search" placeholder="Title, sport, keyword…" autocomplete="off">
+    </div>
+
+    <nav class="rail-group compact" aria-label="Browse">
+      <h2 class="label">Browse</h2>
+      <a href="./" aria-current="page">All articles</a>
+      <a href="about.html">About</a>
+      <a href="data.html">Data &amp; code</a>
+    </nav>
+
+    <div class="rail-group compact" id="g-sport" role="group" aria-label="Filter by sport">
+      <h2 class="label">Sport</h2>
+    </div>
+
+    <div class="rail-group compact" id="g-tag" role="group" aria-label="Filter by tag">
+      <h2 class="label">Tags</h2>
+    </div>
+
+    <div class="rail-group compact" id="g-month" role="group" aria-label="Filter by month">
+      <h2 class="label">Archive</h2>
+    </div>
+  </div>
+
+  <div class="main">
+    <header class="masthead">
+      <a class="name" href="./">Field Data Lab</a>
+      <p class="remit">Behavioral science, tested on the playing field · Anup Walvekar</p>
+    </header>
+
+    <div class="toc-head" id="top">
+      <h2>Articles</h2>
+      <button class="toggle-all" id="toggle-all" type="button" aria-pressed="false">Show all abstracts</button>
+      <p class="status" id="status" aria-live="polite" hidden></p>
+    </div>
+
+    <div class="empty" id="empty" hidden></div>
+
+    <div id="list"></div>
+
+    <nav class="pager" id="pager" aria-label="Pages" hidden></nav>
+
+    <footer class="colophon label">
+      <span>Field Data Lab · Anup Walvekar</span>
+      <span>CC BY 4.0</span>
+    </footer>
+  </div>
+</div>
+```

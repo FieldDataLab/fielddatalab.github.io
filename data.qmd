@@ -1,0 +1,9 @@
+---
+title: Data & code
+comments: false
+include-before-body: assets/back.html
+---
+
+The code for every article lives in this site's repository:
+[FieldDataLab/fielddatalab.github.io](https://github.com/FieldDataLab/fielddatalab.github.io).
+Each article folder holds its analysis next to its text, and each article names the public data it uses.

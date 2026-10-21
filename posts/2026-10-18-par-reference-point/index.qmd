@@ -1,0 +1,75 @@
+---
+title: "Par as a reference point: loss aversion in professional putting"
+date: 2026-10-18
+article-id: FDL-2026-001
+sport: Golf
+categories: [Prospect theory, Loss aversion]
+keywords: [loss aversion, reference dependence, golf, field evidence]
+abstract: >
+  Prospect theory predicts that people work harder to avoid a loss than to
+  secure an equal gain. Golf gives a clean test, because par is an arbitrary
+  reference point with no direct effect on a player's total score. This study
+  compares birdie and par putts of the same length and difficulty, and asks
+  whether players hit par putts with more care.
+bibliography: references.bib
+# Template article: drafts are visible in `quarto preview` but are left out of the published site.
+# Delete this file once you have your own first article.
+draft: true
+---
+
+::: {.callout-note}
+This is a template article that shows the layout. The figure uses illustrative numbers, not results.
+:::
+
+## Introduction
+
+Laboratory studies of loss aversion ask people to choose between gambles with small stakes [@kahneman1979].
+Critics argue that experienced people facing high stakes would learn to ignore arbitrary reference points.
+Professional golf answers that criticism: players are highly practiced, the stakes are large, and every shot is measured.
+
+::: {.column-margin}
+**Why golf?** Every putt has a known distance and a recorded outcome, and par changes nothing about the money except through the final score.
+:::
+
+@pope2011 showed that tour professionals make par putts more often than birdie putts of the same length.
+This article replicates that comparison on newer data and asks whether the gap has shrunk as analytics spread through the sport.
+
+## Data and design
+
+The unit of analysis is a single putt. For each one we know the distance to the hole, the green, the round
+and whether the putt was for birdie, par or bogey. Putts for birdie and par are compared after matching on
+distance, so any difference reflects how the putt was played, not how hard it was.
+
+```{python}
+#| label: fig-make-rate
+#| fig-cap: "Share of putts made, by distance and type. Illustrative numbers to show the figure style."
+import matplotlib.pyplot as plt
+
+feet = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+par = [0.95, 0.84, 0.65, 0.52, 0.41, 0.33, 0.27, 0.22, 0.19, 0.16]
+birdie = [0.93, 0.80, 0.60, 0.47, 0.36, 0.29, 0.23, 0.19, 0.16, 0.13]
+
+fig, ax = plt.subplots(figsize=(7, 3.6))
+ax.plot(feet, par, color="#1f4f8f", lw=2.5, label="Par putts")
+ax.plot(feet, birdie, color="#576276", lw=2, ls="--", label="Birdie putts")
+ax.set_xlabel("Distance to hole (feet)")
+ax.set_ylabel("Share made")
+ax.yaxis.set_major_formatter(lambda v, _: f"{v:.0%}")
+ax.set_ylim(0, 1)
+ax.grid(axis="y", color="#d8dee8", lw=0.8)
+ax.spines[["top", "right"]].set_visible(False)
+ax.legend(frameon=False)
+plt.show()
+```
+
+## What would count as evidence
+
+If par works as a reference point, par putts should be made more often than birdie putts of the same length
+(@fig-make-rate). Missed birdie putts should also tend to come up short, since players protect against a
+three-putt bogey. If players have learned to ignore par, both gaps should be close to zero.
+Similar reference-point effects show up in marathon finish times [@allen2017].
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
