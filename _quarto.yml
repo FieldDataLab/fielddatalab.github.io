@@ -5,6 +5,7 @@ project:
 
 website:
   title: "Field Data Lab"
+  favicon: assets/favicon.svg
   description: "Behavioral science, tested on the playing field"
   site-url: https://fielddatalab.github.io
   repo-url: https://github.com/FieldDataLab/fielddatalab.github.io

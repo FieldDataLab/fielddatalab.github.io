@@ -80,6 +80,20 @@ mark { background: var(--mark); color: inherit; padding: 0 .1em; border-radius: 
 .masthead { border-bottom: 3px double var(--ink); padding-block: 2.5rem 1rem; display: grid; gap: .35rem; }
 .masthead .name { font: 600 clamp(2.2rem, 7vw, 3.4rem)/1 var(--serif); letter-spacing: -.01em; margin: 0; text-decoration: none; }
 .masthead .remit { font-style: italic; color: var(--muted); margin: 0; }
+
+/* Tracking F: one mark shared by the masthead and navigation. */
+.fdl-logo { display: block; flex-shrink: 0; object-fit: contain; }
+.rail .brand, .masthead .name, .fdl-topbar a:first-child {
+  display: flex; align-items: center; gap: .6rem;
+}
+.masthead .name { gap: .85rem; }
+.masthead .fdl-logo { width: clamp(40px, 8vw, 64px); height: auto; }
+@media (max-width: 56rem) {
+  .rail .brand { display: none; }
+}
+@media (max-width: 25rem) {
+  .masthead .name { font-size: 1.9rem; gap: .5rem; }
+}
 .issue-bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .5rem 1.5rem; padding-block: .6rem; border-bottom: 1px solid var(--rule);
   font: 500 .78rem/1.4 var(--label); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
 
