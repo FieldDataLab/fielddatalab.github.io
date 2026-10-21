@@ -103,7 +103,7 @@
 
     const active = [ts.length && `“${q.value.trim()}”`, state.tag, state.sport, state.month && monthName(state.month)].filter(Boolean);
     status.hidden = !active.length;
-    if (active.length) status.textContent = `${found.length} of ${ARTICLES.length} articles match ${active.join(' · ')}`;
+    if (active.length) status.innerHTML = `${found.length} of ${ARTICLES.length} articles match ${escHTML(active.join(' · '))} · <button type="button" class="clear-all">Clear</button>`;
 
     empty.hidden = found.length > 0;
     empty.innerHTML = ARTICLES.length
@@ -179,7 +179,7 @@
     if (f) { setFilter(f.dataset.kind, f.dataset.value); return; }
     const p = ev.target.closest('#pager [data-page]');
     if (p && !p.disabled) { state.page = Number(p.dataset.page); render(true); return; }
-    if (ev.target.closest('#clear')) {
+    if (ev.target.closest('#clear, .clear-all')) {
       q.value = ''; state.tag = state.sport = state.month = null; state.page = 1;
       render(false); q.focus();
     }
@@ -189,9 +189,27 @@
     const open = !ds.every(d => d.open);
     ds.forEach(d => { d.open = open; });
   });
-  // "/" jumps to search; arriving from an article's Search link focuses it too
+  // Navigation drawer
+  const rail = $('rail'), navBtn = $('nav-toggle'), scrim = $('scrim');
+  const narrow = () => matchMedia('(max-width: 56rem)').matches;
+  function setNav(open, focusSearch) {
+    rail.classList.toggle('open', open);
+    scrim.classList.toggle('open', open);
+    navBtn.setAttribute('aria-expanded', String(open));
+    if (open) setTimeout(() => (focusSearch ? q : $('rail-close')).focus(), 60);
+    else if (rail.contains(document.activeElement)) navBtn.focus();
+  }
+  navBtn.addEventListener('click', () => setNav(!rail.classList.contains('open')));
+  $('rail-close').addEventListener('click', () => setNav(false));
+  scrim.addEventListener('click', () => setNav(false));
+  // On small screens the drawer covers the list, so close it once a choice is made
+  rail.addEventListener('click', ev => { if (narrow() && ev.target.closest('[data-kind]')) setNav(false); });
+  q.addEventListener('keydown', ev => { if (ev.key === 'Enter' && narrow()) setNav(false); });
+
+  // "/" opens search; Escape closes the menu; arriving from an article's Search link opens it too
   document.addEventListener('keydown', ev => {
-    if (ev.key === '/' && document.activeElement !== q) { ev.preventDefault(); q.focus(); }
+    if (ev.key === 'Escape' && rail.classList.contains('open')) { setNav(false); return; }
+    if (ev.key === '/' && document.activeElement !== q) { ev.preventDefault(); setNav(true, true); }
   });
-  if (location.hash === '#q') q.focus();
+  if (location.hash === '#q') setNav(true, true);
 })();
