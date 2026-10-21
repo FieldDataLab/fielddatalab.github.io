@@ -146,6 +146,7 @@
 
   function setFilter(kind, value) {
     state[kind] = state[kind] === value ? null : value;
+    if (state[kind] && typeof gtag === 'function') gtag('event', 'select_content', { content_type: kind, item_id: value });
     state.page = 1;
     render(false);
   }
@@ -162,7 +163,15 @@
     if (terms().length) render(false);
   }).catch(() => {});
 
-  q.addEventListener('input', () => { state.page = 1; render(false); });
+  // Report searches and filter clicks to Google Analytics (the search box doesn't change the URL, so GA can't see it otherwise)
+  const track = (name, params) => { if (typeof gtag === 'function') gtag('event', name, params); };
+  let searchTimer;
+  q.addEventListener('input', () => {
+    state.page = 1; render(false);
+    clearTimeout(searchTimer);
+    const term = q.value.trim();
+    if (term.length >= 2) searchTimer = setTimeout(() => track('search', { search_term: term }), 1500);
+  });
   document.addEventListener('click', ev => {
     const more = ev.target.closest('[data-more]');
     if (more) { expanded[more.dataset.more] = !expanded[more.dataset.more]; render(false); return; }
