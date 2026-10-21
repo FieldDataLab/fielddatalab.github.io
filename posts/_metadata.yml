@@ -13,7 +13,9 @@ include-before-body: ../assets/back.html
 comments:
   giscus:
     repo: FieldDataLab/fielddatalab.github.io
+    repo-id: R_kgDOVRzmPQ
     category: Announcements
+    category-id: DIC_kwDOVRzmPc4DJOvh
     mapping: pathname
     reactions-enabled: true
     loading: lazy
