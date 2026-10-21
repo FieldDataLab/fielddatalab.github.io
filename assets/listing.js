@@ -73,7 +73,7 @@
       </details>` : '';
     return `<article class="entry" data-key="${escHTML(key(a))}">
       <h4><a href="${escHTML(a.href)}" target="_blank" rel="noopener">${hl(a.title, ts)}<span class="out" aria-hidden="true">↗</span></a></h4>
-      <p class="byline">${hl(a.author, ts)}</p>
+      ${a.author ? `<p class="byline">${hl(a.author, ts)}</p>` : ''}
       <div class="meta">${idChip}<span class="label">${dayLabel(a.date)} · ${a.mins} min read</span>${chips}</div>
       ${abstract}
     </article>`;

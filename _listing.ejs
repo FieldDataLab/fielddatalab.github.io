@@ -7,7 +7,7 @@
     title: i.title || '',
     date: String(i.date || '').slice(0, 10),
     href: i.outputHref || i.path,
-    author: who(i.author) || 'Anup Walvekar',
+    author: who(i.author),
     sport: i.sport || '',
     tags: i.categories || [],
     abs: i.abstract || i.description || '',
@@ -56,7 +56,7 @@
   <div class="main">
     <header class="masthead">
       <a class="name" href="./"><img class="fdl-logo" src="assets/logo.svg" alt="" width="64" height="64"><span>Field Data Lab</span></a>
-      <p class="remit">Behavioral science, tested on the playing field · Anup Walvekar</p>
+      <p class="remit">Behavioral science, tested on the playing field</p>
     </header>
 
     <div class="toc-head" id="top">
@@ -72,7 +72,7 @@
     <nav class="pager" id="pager" aria-label="Pages" hidden></nav>
 
     <footer class="colophon label">
-      <span>Field Data Lab · Anup Walvekar</span>
+      <span>Field Data Lab</span>
       <span>CC BY 4.0</span>
     </footer>
   </div>
