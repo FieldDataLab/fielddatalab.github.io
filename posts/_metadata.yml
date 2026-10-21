@@ -6,7 +6,7 @@ citation: true
 license: "CC BY"
 number-sections: true
 toc: true
-toc-location: left
+toc-location: right
 toc-title: Contents
 title-block-banner: false
 include-before-body: ../assets/back.html

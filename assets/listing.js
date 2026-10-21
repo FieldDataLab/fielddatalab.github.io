@@ -212,4 +212,5 @@
     if (ev.key === '/' && document.activeElement !== q) { ev.preventDefault(); setNav(true, true); }
   });
   if (location.hash === '#q') setNav(true, true);
+  else if (location.hash === '#menu') setNav(true);
 })();
