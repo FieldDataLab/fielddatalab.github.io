@@ -172,6 +172,8 @@ footer.colophon { margin-top: 3rem; padding-top: 1rem; border-top: 3px double va
 figure { margin: 1.75rem 0; }
 .fig-scroll { overflow-x: auto; }
 figure svg { display: block; width: 100%; max-width: 40rem; height: auto; }
+.quarto-figure img.figure-img { width: 100%; max-width: 30rem; height: auto; }
+.quarto-figure figcaption { max-width: 30rem; margin: .6rem auto 0; text-align: left; }
 figcaption { font: .85rem/1.5 var(--label); color: var(--muted); margin-top: .5rem; max-width: 60ch; }
 figcaption b { color: var(--ink); }
 ol.refs { padding-left: 1.4rem; font-size: .92rem; display: grid; gap: .45rem; }
@@ -219,7 +221,8 @@ figcaption, .figure-caption { font: .85rem/1.5 var(--label); color: var(--muted)
 #TOC a.nav-link { color: var(--ink); }
 #TOC a.nav-link.active { color: var(--accent); border-left-color: var(--accent); }
 
-#quarto-appendix { border-top: 3px double var(--ink); background: var(--paper); }
+#quarto-appendix, #quarto-appendix.default { border-top: 3px double var(--ink); background: var(--paper); color: var(--ink); }
+#quarto-appendix pre, #quarto-appendix .quarto-appendix-citeas { background: var(--paper); color: var(--ink); border: 1px solid var(--rule); }
 #quarto-appendix .quarto-appendix-heading { font: 500 .75rem var(--label); letter-spacing: .09em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--rule); }
 #quarto-appendix .quarto-appendix-contents, .quarto-appendix-citeas { font-size: .92rem; }
 .csl-entry { margin-bottom: .45rem; }

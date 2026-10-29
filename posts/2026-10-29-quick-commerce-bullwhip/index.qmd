@@ -27,7 +27,7 @@ Give those businesses weekly ordering cycles and long delivery waits, and a mode
 
 We fed recorded Walmart sales into this simulated chain. The swing ratio climbed from 1.3× at stores to 2.7× at state wholesalers and **9.0× at the national distributor**.
 
-![Orders become much more variable upstream in the traditional simulation than in quick commerce.](charts/e01_upstream.png)
+![**Swings grow at every step up the traditional chain.** Each point is the swing ratio for the median product: the variance of weekly orders placed by that tier, divided by the variance of weekly shopper input. Traditional retail climbs from 1.3× at stores to 9.0× at the national distributor. Quick commerce reaches only 1.2× at the platform hub. Shading shows the middle half of products.](charts/e01_upstream.png){#fig-upstream fig-alt="Orders become much more variable upstream in the traditional simulation than in quick commerce."}
 
 Real calendar spikes show the same pattern. Around the Super Bowl, the brand's busiest order week in traditional trade typically came a week after the shoppers' busiest week and was 1.5× its size, against about 1.0× in quick commerce. Treat this as descriptive: the data hold only four Super Bowls, and each overlaps SNAP food-benefit days.
 
@@ -60,7 +60,7 @@ The simulation mostly contradicted that hypothesis. The same shopper input produ
 
 Daily replenishment did most of the work. After pooling the middle tier, changing reviews from weekly to daily lowered the ratio from 9.5× to 1.8×; shorter delivery waits and removing a stocking tier brought further reductions.
 
-![Daily replenishment accounts for the largest reduction along the modeled structural changes.](charts/e08_structure.png)
+![**Daily ordering does most of the work.** Each row changes one thing from the row above, moving step by step from the traditional chain (top) to quick commerce (bottom). Switching from weekly to daily reviews cuts the swing ratio from 9.5× to 1.8×; shorter delivery waits and a simpler network take it to 1.2×. Diamonds show the same network with safety stock tuned for a similar fill rate.](charts/e08_structure.png){#fig-structure fig-alt="Daily replenishment accounts for the largest reduction along the modeled structural changes."}
 
 Availability mattered too. Daily ordering alone initially reduced the share of demand fulfilled by 1.45 percentage points; shorter delivery delays restored it. Across the full structural change, median on-hand stock fell from 48.3 to 6.9 days and fulfillment rose from 97.4% to 98.4%.
 
@@ -68,7 +68,7 @@ Forecast updating and shortage gaming became weaker sources of amplification. Ba
 
 Sales visibility behaved as expected. Letting traditional upstream planners forecast from store sales instead of downstream orders cut amplification by 71.4%, with little change in availability. The benefit in quick commerce was only 2.1%.
 
-![Shared store sales substantially reduce traditional amplification and make a small difference in quick commerce.](charts/e09_shared_sales.png)
+![**Sharing store sales matters where orders hide demand.** Rows show what the upstream tiers forecast from. In traditional retail, forecasting from store sales instead of incoming orders cuts the swing ratio from 9.0× to 2.6×. In quick commerce the platform already sees sales, so sharing changes little. Hollow circles repeat each case under a recurring supply shortage. Note the different horizontal scales.](charts/e09_shared_sales.png){#fig-shared-sales fig-alt="Shared store sales substantially reduce traditional amplification and make a small difference in quick commerce."}
 
 For our biscuit planner, sales data would reveal how much of a distributor’s order reflected purchases at the shelf. Its value depends on the distortion already present, a question studied experimentally by [Croson and Donohue (2003)](https://doi.org/10.1111/j.1937-5956.2003.tb00194.x).
 
@@ -80,7 +80,7 @@ Sharing forecast errors across stores had a small typical-product effect of 2.1%
 
 Dividing each original catchment among twenty dark stores produced the clearest surprise. Median stock doubled from 6.9 to 13.8 days, yet the share of demand fulfilled fell from 98.4% to 91.9%. Orders became calmer.
 
-![Fragmentation increases inventory, especially for intermittent products, while availability deteriorates.](charts/e13_fragmentation.png)
+![**More dark stores mean more stock, yet calmer orders.** The same shoppers are split across 1 to 20 dark stores per original store. Stock held across the network rises steeply, most of all for slow, patchy sellers, while order swings at the brand fall. The swings fall because shelves empty more often: the share of shoppers served drops from 98.4% to 91.9%.](charts/e13_fragmentation.png){#fig-fragmentation fig-alt="Fragmentation increases inventory, especially for intermittent products, while availability deteriorates."}
 
 More inventory across the network did not ensure that a particular shelf had the right product. Intermittent sellers suffered especially. A planner watching only brand orders could miss both the extra stock and the lost sales.
 
@@ -90,13 +90,13 @@ The baseline faster network had saved stock and improved availability. These add
 
 If a platform opens many stores together, their initial purchases can arrive at the brand together too. In our 26-week expansion scenario, synchronized openings produced a peak weekly orders-to-shopper-input ratio of 1.37×. Staggering openings across catchments reduced it to 1.07×.
 
-![Synchronized store openings briefly separate brand orders from unchanged shopper input.](charts/e14_expansion.png)
+![**Opening stores together sends brief spikes to the brand.** Brand orders (blue) and shopper input (black), relative to the weekly level before openings, while each catchment grows from 1 to 10 dark stores (bottom panel). Shopper input does not change, but synchronized openings add short spikes in brand orders. Staggering the openings across catchments removes most of them (not shown).](charts/e14_expansion.png){#fig-expansion fig-alt="Synchronized store openings briefly separate brand orders from unchanged shopper input."}
 
 The surge did not become a lasting additional bullwhip. Once expansion settled, the swing ratio was 1.16×, with no detectable increase over an established network of the same size. Across the entire expansion, orders were slightly below shopper input despite a stock build; lost sales helped offset opening purchases.
 
 A channel switch could send the opposite signal. If quick commerce’s share rose from 10% to 70% over 26 weeks, our scenario had traditional inventory running down while dark-store inventory grew. Combined brand purchases during that switch fell below unchanged shopper demand by roughly four weeks of purchases [27.6 days of pre-switch average input].
 
-![Traditional destocking outweighs quick-commerce inventory building during the channel switch.](charts/e15_migration.png)
+![**When shoppers switch channels, the brand sees a dip, not a surge.** Quick commerce's share rises from 10% to 70% over 26 weeks (bottom panel). Traditional orders fall faster than quick-commerce orders rise, as distributors run down their stock. Combined brand orders (gold) therefore run below shopper input (black) through the switch, by about four weeks of purchases in total.](charts/e15_migration.png){#fig-migration fig-alt="Traditional destocking outweighs quick-commerce inventory building during the channel switch."}
 
 That gap includes simulated unmet demand, so it compares orders with shopper input rather than completed sales. Afterward, the swing ratio was 2.52× versus 2.57× in a network already operating at 70% quick commerce. The transition did not establish lasting additional amplification.
 
