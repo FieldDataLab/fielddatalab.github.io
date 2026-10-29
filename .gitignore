@@ -3,3 +3,6 @@
 /.venv/
 **/*.quarto_ipynb
 .DS_Store
+
+# Local data analysis workspace (not published)
+/local/

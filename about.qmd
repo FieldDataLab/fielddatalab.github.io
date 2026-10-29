@@ -4,7 +4,8 @@ comments: false
 include-before-body: assets/back.html
 ---
 
-Field Data Lab tests ideas from behavioral science on sports data. Sport is a good place to study
-decisions: the stakes are real, the people are experienced, and almost everything is recorded.
+Field Data Lab uses empirical analysis of real-world data to draw behavioral insights. Field data shows how
+people, and the systems they build, actually decide when the stakes are real: on the playing field, on the shop
+floor, along a supply chain. Lab studies show what people say they would do.
 
-Each article states its question, its data and its method, and links to the code so the analysis can be rerun.
+Each article states its question, its data and its method. The code behind any article is available on request.

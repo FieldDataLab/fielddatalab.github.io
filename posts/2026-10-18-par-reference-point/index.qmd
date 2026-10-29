@@ -2,7 +2,7 @@
 title: "Par as a reference point: loss aversion in professional putting"
 date: 2026-10-18
 article-id: FDL-2026-001
-sport: Golf
+field: Golf
 categories: [Prospect theory, Loss aversion]
 keywords: [loss aversion, reference dependence, golf, field evidence]
 abstract: >

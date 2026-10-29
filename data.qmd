@@ -4,6 +4,7 @@ comments: false
 include-before-body: assets/back.html
 ---
 
-The code for every article lives in this site's repository:
-[FieldDataLab/fielddatalab.github.io](https://github.com/FieldDataLab/fielddatalab.github.io).
-Each article folder holds its analysis next to its text, and each article names the public data it uses.
+Each article names the data it uses and where to get it. Most of it is public.
+
+The analysis code isn't published with the articles, but it is available on request.
+To ask for it, leave a comment under the article.

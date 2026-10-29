@@ -1,15 +1,15 @@
-// Contents page: search, sport/tag/month filters, month grouping and pagination.
+// Contents page: search, field/tag/month filters, month grouping and pagination.
 // Article data comes from _listing.ejs; full article text comes from Quarto's search.json.
 (() => {
   const ARTICLES = JSON.parse(decodeURIComponent(document.getElementById('fdl-data').textContent.trim()));
   const PER_PAGE = 10;
   const TOP_N = 5;
-  const expanded = { tag: false, sport: false };
+  const expanded = { tag: false, field: false };
   const fullText = new Map();
 
   const $ = id => document.getElementById(id);
   const q = $('q'), list = $('list'), pager = $('pager'), status = $('status'), empty = $('empty'), toggleBtn = $('toggle-all');
-  const state = { tag: null, sport: null, month: null, page: 1 };
+  const state = { tag: null, field: null, month: null, page: 1 };
   const openIds = new Set();
 
   const monthKey = d => d.slice(0, 7);
@@ -29,7 +29,7 @@
     const byCount = (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]);
     const groups = [
       ['g-tag', 'tag', [...count(a => a.tags)].sort(byCount), k => k],
-      ['g-sport', 'sport', [...count(a => a.sport)].sort(byCount), k => k],
+      ['g-field', 'field', [...count(a => a.field)].sort(byCount), k => k],
       ['g-month', 'month', [...count(a => monthKey(a.date))].sort((a, b) => b[0].localeCompare(a[0])), monthName]
     ];
     groups.forEach(([gid, kind, items, label]) => {
@@ -55,17 +55,17 @@
 
   function matches(a, ts) {
     if (state.tag && !a.tags.includes(state.tag)) return false;
-    if (state.sport && a.sport !== state.sport) return false;
+    if (state.field && a.field !== state.field) return false;
     if (state.month && monthKey(a.date) !== state.month) return false;
-    const hay = [a.title, a.abs, a.kw, a.sport, a.id, a.author, ...a.tags, fullText.get(a.href) || ''].join(' ').toLowerCase();
+    const hay = [a.title, a.abs, a.kw, a.field, a.id, a.author, ...a.tags, fullText.get(a.href) || ''].join(' ').toLowerCase();
     return ts.every(t => hay.includes(t));
   }
 
   function entryHTML(a, ts) {
     const absHit = ts.length && ts.some(t => (a.abs + ' ' + a.kw).toLowerCase().includes(t) && !a.title.toLowerCase().includes(t));
     const open = openIds.has(key(a)) || absHit;
-    const chips = [a.sport, ...a.tags].map((t, i) => t &&
-      `<button type="button" class="tag" data-kind="${i ? 'tag' : 'sport'}" data-value="${escHTML(t)}">${hl(t, ts)}</button>`).join('');
+    const chips = [a.field, ...a.tags].map((t, i) => t &&
+      `<button type="button" class="tag" data-kind="${i ? 'tag' : 'field'}" data-value="${escHTML(t)}">${hl(t, ts)}</button>`).join('');
     const idChip = a.id ? `<span class="label mono">${hl(a.id, ts)}</span>` : '';
     const abstract = a.abs ? `<details class="abstract"${open ? ' open' : ''}>
         <summary>Abstract</summary>
@@ -101,13 +101,13 @@
       syncToggle();
     }));
 
-    const active = [ts.length && `“${q.value.trim()}”`, state.tag, state.sport, state.month && monthName(state.month)].filter(Boolean);
+    const active = [ts.length && `“${q.value.trim()}”`, state.tag, state.field, state.month && monthName(state.month)].filter(Boolean);
     status.hidden = !active.length;
     if (active.length) status.innerHTML = `${found.length} of ${ARTICLES.length} articles match ${escHTML(active.join(' · '))} · <button type="button" class="clear-all">Clear</button>`;
 
     empty.hidden = found.length > 0;
     empty.innerHTML = ARTICLES.length
-      ? 'No articles match. Try a sport, a method or a keyword, or <button type="button" id="clear">clear all filters</button>.'
+      ? 'No articles match. Try a field, a method or a keyword, or <button type="button" id="clear">clear all filters</button>.'
       : 'The first article is on its way.';
 
     pager.hidden = pages <= 1;
@@ -180,7 +180,7 @@
     const p = ev.target.closest('#pager [data-page]');
     if (p && !p.disabled) { state.page = Number(p.dataset.page); render(true); return; }
     if (ev.target.closest('#clear, .clear-all')) {
-      q.value = ''; state.tag = state.sport = state.month = null; state.page = 1;
+      q.value = ''; state.tag = state.field = state.month = null; state.page = 1;
       render(false); q.focus();
     }
   });
