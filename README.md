@@ -7,7 +7,7 @@ Built with [Quarto](https://quarto.org). Pushing to `main` publishes the site th
 ## Write an article
 
 1. Create a folder in `posts/`, e.g. `posts/2026-11-02-penalty-kicks/`, with an `index.qmd` inside.
-   Copy the front matter from `posts/2026-10-18-par-reference-point/index.qmd`:
+   Copy the front matter from `posts/2026-10-29-quick-commerce-bullwhip/index.qmd`:
    `title`, `date`, `field` (the area the data comes from, e.g. Golf or Retail supply chain), `categories` (the tags), `keywords`, `abstract`, and optionally `article-id` and `bibliography`.
 2. Preview while you write:
    ```sh

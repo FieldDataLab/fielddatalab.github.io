@@ -1,6 +1,7 @@
 ---
 title: "Quick commerce tames the bullwhip. The cost moves elsewhere."
 date: 2026-10-29
+article-id: FDL-2026-001
 field: Retail supply chain
 categories: [Bullwhip effect, Behavioral operations, Simulation]
 keywords: [quick commerce, inventory, replenishment, demand forecasting, Walmart M5]
@@ -10,7 +11,6 @@ abstract: >
   tames this amplification. Fragmentation creates stock and availability
   problems, while store openings and channel switches can temporarily separate
   brand orders from shopper demand.
-draft: true
 ---
 
 <!-- hero: charts/e08_structure.png. Daily replenishment produces the largest structural reduction, and the channel ranking survives alternative forecasting settings and product segments. Opening surges are temporary and depend on synchronization. -->
