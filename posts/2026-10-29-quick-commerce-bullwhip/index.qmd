@@ -1,130 +1,282 @@
 ---
-title: "Quick commerce tames the bullwhip. The cost moves elsewhere."
+title: "Quick commerce puts the bullwhip remedies to work"
 date: 2026-10-29
 article-id: FDL-2026-001
 field: Retail supply chain
 categories: [Bullwhip effect, Behavioral operations, Simulation]
 keywords: [quick commerce, inventory, replenishment, demand forecasting, Walmart M5]
 abstract: >
-  A brand can receive wildly changing orders even when shoppers buy steadily.
-  A simulation driven by Walmart sales finds that daily replenishment largely
-  tames this amplification. Fragmentation creates stock and availability
-  problems, while store openings and channel switches can temporarily separate
-  brand orders from shopper demand.
+  Daily replenishment, shorter lead times and shared sales information implement
+  the remedies proposed in the classic bullwhip literature. An order-up-to model
+  explains how these choices reduce amplification, and a simulation on Walmart
+  sales finds an 87% reduction between modeled traditional and quick-commerce
+  networks. Fragmentation raises inventory while weakening availability.
+  An accounting identity separates temporary opening orders and channel-switch
+  destocking from changes in shopper demand.
 ---
 
-<!-- hero: charts/e08_structure.png. Daily replenishment produces the largest structural reduction, and the channel ranking survives alternative forecasting settings and product segments. Opening surges are temporary and depend on synchronization. -->
+In their 1997 *Sloan Management Review* article, [Lee, Padmanabhan and Whang](https://sloanreview.mit.edu/article/the-bullwhip-effect-in-supply-chains/) described a puzzle at Procter & Gamble. Retail sales of Pampers fluctuated moderately, while distributors’ orders to P&G varied much more. P&G called this the bullwhip effect. The authors identified four causes: demand forecast updating, order batching, price fluctuation, and rationing and shortage gaming. These could arise from rational decisions within the supply chain.
 
-Picture a demand planner at a biscuit brand. The sales team says shoppers are buying much as before. Yet distributor orders arrive in bursts, followed by silence. The planner has to set the factory schedule and explain why a warehouse full of biscuits can coexist with urgent replenishment requests.
+<!-- hero: charts/e08_structure.png. The structural comparison supports the central claim across forecast settings and product segments. The gain chart explains the unconstrained policy; transition peaks are separate inventory-accounting effects. -->
 
-Now imagine some of those shoppers buying through an app. The brand receives opening orders for new dark stores while its distributors cut purchases. The biscuits still reach kitchen cupboards. The signals reaching the factory have changed.
+The lineage reaches back to Forrester’s industrial dynamics (1958) and [Sterman’s Beer Game research (1989)](https://doi.org/10.1287/mnsc.35.3.321). Lee and colleagues focused attention on the information and incentives facing independent businesses. Their remedies were concrete: share point-of-sale information, order smaller quantities more often, shorten lead times, and allocate scarce supply using past sales.
 
-## How a biscuit gets to a kirana
+Quick commerce puts several of those remedies into practice. Our argument combines a linear ordering model with a simulation driven by recorded sales: faster, coordinated replenishment substantially reduces amplification, while fragmented inventories and channel transitions create different operational problems.
 
-In a simplified traditional chain, biscuits travel from the brand through a distributor and wholesaler to the kirana. Orders travel back the other way. Each business must decide how much to buy before it knows exactly what its customers will need.
+## Why layered chains amplify orders
 
-Give those businesses weekly ordering cycles and long delivery waits, and a modest change at the shelf can become a much larger change upstream. This is the bullwhip effect. Our **swing ratio** measures it: the variance of weekly brand orders divided by the variance of weekly shopper input, taking the median across products. A ratio of 9× means nine times the variance, not nine times the order volume or peak.
+The classic setting has several stocking tiers, batched orders, long delivery waits and limited shared sales information. It also provides a useful model of India’s traditional trade: orders move from kiranas through wholesalers and distributors toward brands. Goods move in the opposite direction.
 
-We fed recorded Walmart sales into this simulated chain. The swing ratio climbed from 1.3× at stores to 2.7× at state wholesalers and **9.0× at the national distributor**.
+Each tier forecasts what its customers will order and holds stock to cover the wait for replenishment. A forecast revision therefore changes both expected sales and the desired inventory position.
+
+The following result describes that mechanism without requiring normally distributed or independent demand. Let reviews occur every $R$ days, delivery take $L$ days, and
+$$
+a=1-(1-\alpha)^R,\qquad \beta=1-a,\qquad m=\frac{R+L}{R}.
+$$
+Here $X_t$ is input during review period $t$, $F_t=\beta F_{t-1}+aX_t$ is its forecast, and the target is $S_t=mF_t+s$ with fixed safety allowance $s$.
+
+Forecast revisions amplify demand cycles by different amounts; the observed bullwhip depends on which cycles demand contains.
+
+::: {#thm-filter}
+## Amplification filter
+
+Assume $0<a\leq1$, $m>0$, complete accounting for inventory obligations, unrestricted signed orders, and backlogged unmet demand. For the stationary solution,
+$$
+q_t=X_t+m(F_t-F_{t-1}),\qquad
+H(z)=1+ma\frac{1-z}{1-\beta z}.
+$$
+If $X_t$ is covariance-stationary with finite, positive variance and spectral density $f_X$, its variance ratio is
+$$
+\mathcal B=
+\frac{\int_{-\pi}^{\pi}|H(e^{-i\omega})|^2f_X(\omega)\,d\omega}
+{\int_{-\pi}^{\pi}f_X(\omega)\,d\omega}.
+$$
+For stationary seasonal components with spectral lines, replace $f_X(\omega)d\omega$ by the spectral measure.
+:::
+
+::: {.proof}
+Between reviews, input reduces inventory position by $X_t$. Restoring the position to $S_t$ requires $q_t=X_t+S_t-S_{t-1}$. Exponential smoothing gives $F=a(1-\beta B)^{-1}X$, where $B$ is the review-period lag operator. The stable filter therefore satisfies $f_q=|H|^2f_X$.
+:::
+
+By @lem-gain, gain rises toward faster cycles. Long delivery waits increase the inventory adjustment attached to each forecast revision.
+
+When each tier learns from the previous tier’s orders, it processes an already distorted signal.
+
+::: {#prp-tiers}
+## Cascaded forecasts and shared demand
+
+Consider tiers on a common, aligned review clock, with common $a$ and protection factors $m_j$. Write $G(z)=(1-z)/(1-\beta z)$. Forecasting from incoming orders gives
+$$
+H_{\mathrm{cascade}}=\prod_j(1+m_j aG).
+$$
+If every tier instead forecasts the same shopper-input sequence, while passing on its child’s orders,
+$$
+H_{\mathrm{shared}}=1+aG\sum_jm_j.
+$$
+:::
+
+::: {.proof}
+Without sharing, $q_j=H_jq_{j-1}$. With sharing, $q_j=q_{j-1}+m_jaGX$. Iterating the first recursion multiplies filters; summing the second adds forecast adjustments.
+:::
+
+This multiplication concerns frequency-specific gains, not a product of separately averaged bullwhip ratios. The classical forecasting analyses of Chen and colleagues (2000) establish closely related effects of smoothing, lead times and information.
+
+The simulated traditional chain exhibits the predicted upstream accumulation (@fig-upstream). Its median weekly swing ratio rises from 1.3× at stores to 2.7× at wholesalers and 9.0× at the distributor. Here the swing ratio compares each tier’s weekly order variance with weekly shopper-input variance; it does not compare order volumes.
 
 ![**Swings grow at every step up the traditional chain.** Each point is the swing ratio for the median product: the variance of weekly orders placed by that tier, divided by the variance of weekly shopper input. Traditional retail climbs from 1.3× at stores to 9.0× at the national distributor. Quick commerce reaches only 1.2× at the platform hub. Shading shows the middle half of products.](charts/e01_upstream.png){#fig-upstream fig-alt="Orders become much more variable upstream in the traditional simulation than in quick commerce."}
 
-Real calendar spikes show the same pattern. Around the Super Bowl, the brand's busiest order week in traditional trade typically came a week after the shoppers' busiest week and was 1.5× its size, against about 1.0× in quick commerce. Treat this as descriptive: the data hold only four Super Bowls, and each overlaps SNAP food-benefit days.
+## Faster replenishment implements the remedies
 
-## Sensible decisions can produce wild orders
+A coordinated dark-store-and-hub network can replenish daily, share sales records and shorten delivery waits. In our model, daily reviews remove weekly batching, and coordinated ordering excludes independent buyers inflating allocation requests. Shorter protection horizons reduce forecast-update amplification; they do not eliminate it. Platforms can also run discounts, whose effects are outside this paper’s scope.
 
-The planner's problem starts with decisions that make sense to each business on its own. [Lee, Padmanabhan and Whang (1997)](https://doi.org/10.1287/mnsc.43.4.546) named four classic causes of the bullwhip effect:
+The same shopper input produces a swing ratio of 1.2× in the quick-commerce structure against 9.0× in traditional retail, approximately 87% lower. Daily reviews deliver the largest reduction along the structural comparison: after pooling the middle tier, the ratio falls from 9.5× to 1.8× (@fig-structure).
 
-- **Forecast updating.** Each business revises its forecast after a strong or weak week, and its order moves more than its sales did.
-- **Order batching.** Ordering weekly, or in large lots, turns steady buying into bursts and gaps.
-- **Price promotions.** Discounts encourage buying ahead, so orders run ahead of what shoppers buy and then fall away.
-- **Shortage gaming.** When a supplier rations stock, buyers ask for more than they need and cut back once supply returns.
+![**Daily ordering does most of the work.** Each row changes one thing from the row above, moving step by step from the traditional chain (top) to quick commerce (bottom). Switching from weekly to daily reviews cuts the swing ratio from 9.5× to 1.8×; shorter delivery waits and a simpler network take it to 1.2×. Diamonds use safety stock tuned toward a training-period fill target, without guaranteeing equal subsequent availability.](charts/e08_structure.png){#fig-structure fig-alt="Daily replenishment accounts for the largest reduction along the modeled structural changes."}
 
-A fifth cause is behavioral. In the Beer Game studied by [Sterman (1989)](https://doi.org/10.1287/mnsc.35.3.321) and [Croson and Donohue (2006)](https://doi.org/10.1287/mnsc.1050.0436), players tend to overlook stock they have already ordered, so they order again.
+Daily ordering alone initially lowers fulfillment by 1.45 percentage points; shorter delivery delays restore it. Across the complete structural change, median on-hand stock falls from 48.3 to 6.9 days and fulfillment rises from 97.4% to 98.4%.
 
-Our traditional chain has the ingredients for these causes: weekly orders, delivery waits of up to a week at each tier, and forecasts revised at every order. Grouping stores does not fix it. Replacing ten middle warehouses with one cut stock by 17.5% but raised the brand's swing ratio by 15.2%.
+The filter explains why the change is substantial. With the modeled parameters, the traditional cascade reaches variance gain 17.2× at a two-week cycle. The quick-commerce filter remains below 1.8× at every frequency (@fig-gain).
 
-## The same biscuit takes a shorter route
+![**Shorter, daily cycles sharply reduce amplification.** Curves show frequency-specific variance gains under the unconstrained policy with fixed safety stock. The shared-sales curve assumes aligned review windows; the traditional simulation instead uses staggered review dates. At a 52-week cycle, traditional gain is still 1.58×: unit gain is the limit as cycle length tends to infinity.](charts/theory_gain.png){#fig-gain fig-alt="Traditional theoretical gain reaches about seventeen at short cycles, while quick-commerce gain stays below two."}
 
-Indian quick commerce changes the journey to the kitchen. Platforms such as Blinkit, Zepto and Instamart use dark stores to fulfill app purchases and offer delivery in minutes. Stock sits close to shoppers, and the platform records each sale directly.
+Shared sales replace the cascade with the sum in @prp-tiers. In this aligned-clock calculation, sharing strongly damps cycles shorter than about 30 weeks but slightly increases gain at longer cycles. Information sharing is therefore not a reduction at every frequency.
 
-Our simplified version replenishes dark stores daily from a city hub. That should weaken batching and reduce the inventory consequences of forecast revisions. Sharing sales data should add less when the platform already has the sales.
+Its overall effect in the full simulation is nevertheless large for traditional retail: forecasting from store sales cuts amplification by 71.4%, with little change in fulfillment. The quick-commerce reduction is only 2.1% (@fig-shared-sales), because its incoming daily orders already contain much less distortion.
 
-But smaller stores divide inventory among more locations. Openings may happen together. Shoppers may switch channels while distributors still hold stock. An algorithm may mistake an empty shelf for weak demand, or repeat the same forecast error across stores.
+![**Sharing store sales matters where orders hide demand.** Rows show what the upstream tiers forecast from. In traditional retail, forecasting from store sales instead of incoming orders cuts the swing ratio from 9.0× to 2.6×. Quick-commerce orders already track shopper input more closely, so changing the forecast signal adds little. Hollow circles repeat each case under a recurring supply shortage. Note the different horizontal scales.](charts/e09_shared_sales.png){#fig-shared-sales fig-alt="Shared store sales substantially reduce traditional amplification and make a small difference in quick commerce."}
 
-Our starting hypothesis was that **“the bullwhip stays, for different reasons.”** Faster delivery might quiet the familiar causes while these new ones took their place.
+Slow movements can also conceal amplification of faster fluctuations.
 
-## The orders became calmer than we expected
+::: {#cor-slow}
+## Slow variation can dilute the measured bullwhip
 
-The simulation mostly contradicted that hypothesis. The same shopper input produced a swing ratio of **1.2× in quick commerce against 9.0× in traditional retail**, a reduction of about 87%.
+Let $X=X_s+X_f$, with components uncorrelated at every lag. If their filtered variance ratios satisfy $\mathcal B_s<\mathcal B_f$, then
+$$
+\mathcal B=w\mathcal B_s+(1-w)\mathcal B_f,\qquad
+w=\frac{\operatorname{Var}X_s}{\operatorname{Var}X}.
+$$
+Removing the slow component raises the ratio. For variation concentrated sufficiently near zero frequency, $\mathcal B_s$ approaches one.
+:::
 
-Daily replenishment did most of the work. After pooling the middle tier, changing reviews from weekly to daily lowered the ratio from 9.5× to 1.8×; shorter delivery waits and removing a stocking tier brought further reductions.
+::: {.proof}
+The input and filtered-output variances each add across the two uncorrelated components. Dividing their sums gives the weighted average.
+:::
 
-![**Daily ordering does most of the work.** Each row changes one thing from the row above, moving step by step from the traditional chain (top) to quick commerce (bottom). Switching from weekly to daily reviews cuts the swing ratio from 9.5× to 1.8×; shorter delivery waits and a simpler network take it to 1.2×. Diamonds show the same network with safety stock tuned for a similar fill rate.](charts/e08_structure.png){#fig-structure fig-alt="Daily replenishment accounts for the largest reduction along the modeled structural changes."}
+Consistent with this mechanism, the traditional simulation’s ratio rises from 9.0× raw to 24.7× after detrending. This is evidence about the chosen trend removal, not a claim that every seasonal adjustment must increase the ratio.
 
-Availability mattered too. Daily ordering alone initially reduced the share of demand fulfilled by 1.45 percentage points; shorter delivery delays restored it. Across the full structural change, median on-hand stock fell from 48.3 to 6.9 days and fulfillment rose from 97.4% to 98.4%.
+The channel ranking holds across forecast settings—traditional 2.4×–30.2× versus quick commerce 1.07×–1.36×—after detrending, and for both fast and intermittent sellers.
 
-Forecast updating and shortage gaming became weaker sources of amplification. Batching could still undo progress: imposing weekly orders on quick commerce raised its ratio by 121%. Buying-ahead effects remained similar across channels.
+## Fragmentation shifts the problem to inventory
 
-Sales visibility behaved as expected. Letting traditional upstream planners forecast from store sales instead of downstream orders cut amplification by 71.4%, with little change in availability. The benefit in quick commerce was only 2.1%.
+Dividing an unchanged catchment among more stores leaves each location needing its own buffer.
 
-![**Sharing store sales matters where orders hide demand.** Rows show what the upstream tiers forecast from. In traditional retail, forecasting from store sales instead of incoming orders cuts the swing ratio from 9.0× to 2.6×. In quick commerce the platform already sees sales, so sharing changes little. Hollow circles repeat each case under a recurring supply shortage. Note the different horizontal scales.](charts/e09_shared_sales.png){#fig-shared-sales fig-alt="Shared store sales substantially reduce traditional amplification and make a small difference in quick commerce."}
+::: {#prp-fragmentation}
+## Safety allowances under fragmentation
 
-For our biscuit planner, sales data would reveal how much of a distributor’s order reflected purchases at the shelf. Its value depends on the distortion already present, a question studied experimentally by [Croson and Donohue (2003)](https://doi.org/10.1111/j.1937-5956.2003.tb00194.x).
+Let integer protection-horizon demand $D$ have mean $\mu>0$ and variance $\sigma^2>0$. Independently allocate each unit among $k$ stores with equal probabilities. With a common safety factor $z>0$, the sum of their allowances $z\sqrt{\operatorname{Var}D_j}$ increases relative to the unsplit allowance by
+$$
+r_k=\sqrt{1+\frac{k-1}{\Phi}},\qquad \Phi=\frac{\sigma^2}{\mu}.
+$$
+:::
 
-The algorithmic problems mostly failed to recreate substantial amplification. Under recurring supply restrictions, learning from stocked-out sales reduced the swing ratio by a small 3.3%, while median fulfillment slipped from 96.1% to 95.5%. Skipping learning whenever shelves ended empty made matters worse: it discarded high-demand observations, leaving median fulfillment at 81.3% even without an imposed shortage.
+The proof is in the appendix. The proportional penalty is larger at lower dispersion $\Phi$, not necessarily at lower sales volume. In this sample, intermittent products have lower dispersion over the dark stores' two-day protection horizon (median $\Phi$ 2.68 against 4.37 for fast sellers). Summed over each product's ten catchments, the formula predicts that twenty-way splitting multiplies safety allowances by 2.71 for intermittent products and 2.15 for fast sellers.
 
-Sharing forecast errors across stores had a small typical-product effect of 2.1%. In an extreme scenario where the same injected forecast error hits every product and dark store at once, the portfolio swing ratio reached 1.33×, against 1.16× when errors still differed across stores and 1.14× without injected errors.
+This result concerns leaf safety allowances, rather than all inventory across the network. The simulation shows the same ordering across segments: splitting each catchment twenty ways raises whole-network on-hand stock by a factor of 3.33 for intermittent products and 1.76 for fast sellers.
 
-## Calm orders can hide empty shelves
+Overall, median stock rises from 6.9 to 13.8 days, fulfillment falls from 98.4% to 91.9%, and orders become calmer (@fig-fragmentation). More inventory and lower order variance can coexist with worse availability.
 
-Dividing each original catchment among twenty dark stores produced the clearest surprise. Median stock doubled from 6.9 to 13.8 days, yet the share of demand fulfilled fell from 98.4% to 91.9%. Orders became calmer.
+![**More dark stores mean more stock, yet calmer orders.** The same shoppers are split across 1 to 20 dark stores per original store. Stock held across the network rises steeply, most of all for slow, patchy sellers, while order swings at the brand fall. Fulfillment deteriorates alongside calmer orders: the share of demand served drops from 98.4% to 91.9%.](charts/e13_fragmentation.png){#fig-fragmentation fig-alt="Fragmentation increases inventory, especially for intermittent products, while availability deteriorates."}
 
-![**More dark stores mean more stock, yet calmer orders.** The same shoppers are split across 1 to 20 dark stores per original store. Stock held across the network rises steeply, most of all for slow, patchy sellers, while order swings at the brand fall. The swings fall because shelves empty more often: the share of shoppers served drops from 98.4% to 91.9%.](charts/e13_fragmentation.png){#fig-fragmentation fig-alt="Fragmentation increases inventory, especially for intermittent products, while availability deteriorates."}
+## Openings and migration change the stock balance
 
-More inventory across the network did not ensure that a particular shelf had the right product. Intermittent sellers suffered especially. A planner watching only brand orders could miss both the extra stock and the lost sales.
+Orders arriving at a brand finance both shopper purchases and changes in inventory.
 
-The baseline faster network had saved stock and improved availability. These additional costs appeared when we fragmented it further.
+::: {#prp-accounting}
+## Orders, inventory and lost sales
 
-## Openings and channel switches can fool the factory
+Suppose brand orders are dispatched immediately, with no spoilage, returns or other external inventory flows. Over a window $W$, let $I$ include all on-hand and in-transit stock. Then
+$$
+\sum_W O^{\mathrm{brand}}-\sum_W D
+=\Delta I_W-\mathrm{Lost}_W.
+$$
+:::
 
-If a platform opens many stores together, their initial purchases can arrive at the brand together too. In our 26-week expansion scenario, synchronized openings produced a peak weekly orders-to-shopper-input ratio of 1.37×. Staggering openings across catchments reduced it to 1.07×.
+::: {.proof}
+Internal shipments only move stock within the system. Brand dispatches add stock and completed sales remove it, so $\Delta I_W=\sum_W O^{\mathrm{brand}}-\sum_W\mathrm{sales}$. Substitute $\mathrm{sales}=D-\mathrm{Lost}$.
+:::
 
-![**Opening stores together sends brief spikes to the brand.** Brand orders (blue) and shopper input (black), relative to the weekly level before openings, while each catchment grows from 1 to 10 dark stores (bottom panel). Shopper input does not change, but synchronized openings add short spikes in brand orders. Staggering the openings across catchments removes most of them (not shown).](charts/e14_expansion.png){#fig-expansion fig-alt="Synchronized store openings briefly separate brand orders from unchanged shopper input."}
+The identity separates cumulative inventory movements from demand changes. Their timing depends on replenishment decisions.
 
-The surge did not become a lasting additional bullwhip. Once expansion settled, the swing ratio was 1.16×, with no detectable increase over an established network of the same size. Across the entire expansion, orders were slightly below shopper input despite a stock build; lost sales helped offset opening purchases.
+If store openings are synchronized, opening purchases can arrive together. The expansion scenario produces a peak weekly orders-to-input ratio of 1.37×; staggering openings reduces it to 1.07× (@fig-expansion). After expansion settles, the swing ratio is 1.16×, with no detectable increase over an established network of the same size.
 
-A channel switch could send the opposite signal. If quick commerce’s share rose from 10% to 70% over 26 weeks, our scenario had traditional inventory running down while dark-store inventory grew. Combined brand purchases during that switch fell below unchanged shopper demand by roughly four weeks of purchases [27.6 days of pre-switch average input].
+![**Opening stores together sends brief spikes to the brand.** Brand orders (blue) and shopper input (black), relative to the weekly level before openings, while each catchment grows from 1 to 10 dark stores (bottom panel). Shopper input is held fixed across scenarios, but synchronized openings add short spikes in brand orders. Staggering the openings across catchments removes most of them (not shown).](charts/e14_expansion.png){#fig-expansion fig-alt="Synchronized store openings briefly separate brand orders from unchanged shopper input."}
+
+A channel switch reverses the inventory movement. In the scenario where quick commerce’s share rises from 10% to 70% over 26 weeks, traditional destocking exceeds quick-commerce stockbuilding (@fig-migration).
 
 ![**When shoppers switch channels, the brand sees a dip, not a surge.** Quick commerce's share rises from 10% to 70% over 26 weeks (bottom panel). Traditional orders fall faster than quick-commerce orders rise, as distributors run down their stock. Combined brand orders (gold) therefore run below shopper input (black) through the switch, by about four weeks of purchases in total.](charts/e15_migration.png){#fig-migration fig-alt="Traditional destocking outweighs quick-commerce inventory building during the channel switch."}
 
-That gap includes simulated unmet demand, so it compares orders with shopper input rather than completed sales. Afterward, the swing ratio was 2.52× versus 2.57× in a network already operating at 70% quick commerce. The transition did not establish lasting additional amplification.
+In days of total pre-switch average input, @prp-accounting gives the rounded decomposition
+$$
+\underbrace{-27.6}_{\text{orders minus input}}
+=
+\underbrace{-25.0}_{\text{physical stock change}}
+-
+\underbrace{2.6}_{\text{unmet demand}}.
+$$
+This is a gap against shopper input, not completed sales or a no-switch control. Afterward, the swing ratio is 2.52× against 2.57× in an established 70%-quick-commerce network. A brand could mistake the temporary destocking gap for falling shopper demand.
 
-These are scenarios, not forecasts for a platform. They suggest four checks for a brand team:
+## Implications for brand teams
 
-- **Examine replenishment cadence first.** Daily ordering produced the largest structural reduction; faster delivery helped preserve availability.
-- **Read orders beside sales, stock and availability.** Fragmentation and stockout learning made orders look calm while shelves emptied.
-- **Separate openings and channel switches from demand growth.** Track opening fills and distributor destocking, and stagger openings where possible.
-- **Share sell-through data with traditional partners.** It reduced amplification by about 71% there, with a small benefit in quick commerce.
+- **Prioritize replenishment cadence and delivery time.** Daily reviews produce the largest structural reduction, while shorter waits protect availability.
+- **Share sell-through with traditional partners.** The 71.4% reduction shows the value of replacing distorted orders with sales information.
+- **Monitor stock and availability beside order variance.** Fragmentation doubles stock while lowering fulfillment; calm orders alone are insufficient.
+- **Account separately for openings and channel migration.** Stagger opening fills where possible and distinguish distributor destocking from demand decline.
 
-Return to the biscuit planner facing a quiet order book. Before cutting the factory schedule, the planner needs to see what shoppers bought, what shelves could not supply, and what distributors still hold. The movement of biscuits through those inventories can explain a silence that the order book alone cannot.
+## Scope
 
-## What this is and isn’t
+This is a simulation driven by real Walmart US sales, with channel structures modeled rather than measured on Indian platforms. Recorded sales already conceal historical stockouts. The theorems describe an unconstrained policy; the simulator adds nonnegative orders, lost shelf sales and safety-stock revisions. These changes need not move variance in a universal direction. Shared-data theory assumes aligned review windows, whereas the traditional simulation staggers reviews. The findings concern the modeled operating arrangements, not a universal ownership structure or a forecast of platform growth.
 
-This is a simulation driven by real Walmart US sales. The channel structures are assumptions, not measurements of Blinkit, Zepto or Instamart. Recorded sales already hide any historical stockouts. Across forecasting responsiveness settings of 0.02–0.10, traditional swing ratios ranged from 2.4× to 30.2× and quick commerce from 1.07× to 1.36×. The ranking held after removing trends, using shorter measurement windows and separating fast from intermittent sellers.
+## Appendix: the math
+
+Faster fluctuations induce larger target adjustments in the linear policy.
+
+::: {#lem-gain}
+## Shape of the gain
+
+Under @thm-filter, $|H(e^{-i\omega})|^2$ increases with $\omega$ on $[0,\pi]$, from one to
+$$
+\left(1+\frac{2ma}{2-a}\right)^2.
+$$
+:::
+
+::: {.proof}
+Set $c=\cos\omega$, $u=1+ma$ and $v=\beta+ma$. Then
+$$
+|H|^2=\frac{N(c)}{D(c)}
+=\frac{u^2+v^2-2uvc}{1+\beta^2-2\beta c}.
+$$
+Its derivative with respect to $c$ has numerator
+$$
+N'D-ND'=2(\beta u-v)(u-\beta v).
+$$
+Here $\beta u-v=-ma^2<0$, while
+$$
+u-\beta v=(1-\beta^2)+ma(1-\beta)>0.
+$$
+Thus gain decreases with $c$ and increases with $\omega$. Substituting $\omega=0,\pi$ gives the endpoints.
+:::
+
+Independent period demand gives a compact benchmark.
+
+::: {#cor-iid}
+## Independent-demand benchmark
+
+For i.i.d. review-period demand,
+$$
+\mathcal B=1+2ma+\frac{2m^2a^2}{2-a}.
+$$
+:::
+
+::: {.proof}
+Stationary smoothing gives $\operatorname{Var}F=a\sigma^2/(2-a)$. Since $X_t$ and $F_{t-1}$ are independent, apply variance addition to $q_t=(1+ma)X_t-maF_{t-1}$.
+:::
+
+This is the exponential-smoothing structure analyzed by Chen, Ryan and Simchi-Levi (2000), using our protection-horizon convention.
+
+Weekly summation of a stationary daily input/output pair reweights the spectrum by the squared gain of the seven-day sum filter. Weekly-reviewed pulse orders instead require review-period analysis; they are not a stationary daily filter output.
+
+Splitting units adds uncertainty about where demand appears, even when total demand is unchanged.
+
+::: {.proof}
+For @prp-fragmentation,
+$$
+D_j\mid D\sim\operatorname{Binomial}(D,1/k).
+$$
+Total variance gives
+$$
+\operatorname{Var}D_j
+=\operatorname{Var}(D/k)+E[D(1/k)(1-1/k)]
+=\frac{\sigma^2+(k-1)\mu}{k^2}.
+$$
+Summing $k$ equal safety allowances and dividing by $z\sigma$ yields $r_k$. For heterogeneous catchments $c$, the combined ratio is instead
+$$
+\frac{\sum_c\sqrt{\sigma_c^2+(k-1)\mu_c}}{\sum_c\sigma_c},
+$$
+which cannot generally be obtained by inserting median dispersion into $r_k$.
+:::
 
 ## Method
 
-We used [M5 Walmart sales](https://doi.org/10.1016/j.ijforecast.2021.07.007) from Nixtla’s public mirror: 190 food items across ten stores in three states, spanning 2011–2016. The sample contained 100 fast sellers and 90 intermittent sellers; only 90 intermittent items met the first-year eligibility rule. Selection and forecast initialization used that first year. Simulation covered days 365–1941, with measurements on days 505–1939 after 140 settling days.
+The M5 sample contains 190 food items across ten Walmart stores in three states during 2011–2016: 100 fast sellers and 90 eligible intermittent sellers. Selection and initialization use the first year only. Simulation spans days 365–1941; measurement uses days 505–1939 after 140 settling days.
 
-Traditional retail had stores, state wholesalers and a national distributor, with weekly reviews and delivery delays of 3/5/7 days. Quick commerce had dark stores and a hub, with daily reviews and delays of 1/3 days. Both replenished toward inventory targets using exponentially smoothed forecasts (alpha 0.05) and safety factor 1.65, with lost shelf sales, upstream backlogs and unlimited brand supply.
-
-Structural changes were assessed in sequence. The chart’s alternative safety factors were fitted to a training-period service target; they did not guarantee equal availability afterward. Shortage gaming imposed inflated firm orders. Code is available on request.
+Traditional reviews are weekly with tier lead times 3/5/7 days; quick-commerce reviews are daily with lead times 1/3 days. Forecast responsiveness is $\alpha=0.05$, with safety factor 1.65. Shelf shortages lose sales, upstream obligations are backlogged, and brand supply is unlimited. Ratios use weekly sums; detrending removes a centered 13-week moving average from orders and input. Physical accounting is checked to relative tolerance $10^{-5}$. Code is available on request.
 
 ## References
 
-- Lee, H. L., Padmanabhan, V., & Whang, S. (1997). [Information Distortion in a Supply Chain: The Bullwhip Effect](https://doi.org/10.1287/mnsc.43.4.546).
-- Sterman, J. D. (1989). [Modeling Managerial Behavior: Misperceptions of Feedback in a Dynamic Decision Making Experiment](https://doi.org/10.1287/mnsc.35.3.321).
-- Croson, R., & Donohue, K. (2003). [Impact of POS Data Sharing on Supply Chain Management: An Experimental Study](https://doi.org/10.1111/j.1937-5956.2003.tb00194.x).
-- Croson, R., & Donohue, K. (2006). [Behavioral Causes of the Bullwhip Effect and the Observed Value of Inventory Information](https://doi.org/10.1287/mnsc.1050.0436).
-- Makridakis, S., Spiliotis, E., & Assimakopoulos, V. (2022). [The M5 Competition: Background, Organization, and Implementation](https://doi.org/10.1016/j.ijforecast.2021.07.007).
+- Lee, H. L., Padmanabhan, V., & Whang, S. (1997). [The Bullwhip Effect in Supply Chains](https://sloanreview.mit.edu/article/the-bullwhip-effect-in-supply-chains/). *Sloan Management Review*, 38(3), 93–102.
+- Lee, H. L., Padmanabhan, V., & Whang, S. (1997). [Information Distortion in a Supply Chain: The Bullwhip Effect](https://doi.org/10.1287/mnsc.43.4.546). *Management Science*, 43(4), 546–558.
+- Forrester, J. W. (1958). Industrial Dynamics—A Major Breakthrough for Decision Makers. *Harvard Business Review*, 36(4), 37–66.
+- Sterman, J. D. (1989). [Modeling Managerial Behavior: Misperceptions of Feedback in a Dynamic Decision Making Experiment](https://doi.org/10.1287/mnsc.35.3.321). *Management Science*, 35(3), 321–339.
+- Chen, F., Ryan, J. K., & Simchi-Levi, D. (2000). The Impact of Exponential Smoothing Forecasts on the Bullwhip Effect. *Naval Research Logistics*, 47(4), 269–286.
+- Chen, F., Drezner, Z., Ryan, J. K., & Simchi-Levi, D. (2000). [Quantifying the Bullwhip Effect in a Simple Supply Chain: The Impact of Forecasting, Lead Times, and Information](https://doi.org/10.1287/mnsc.46.3.436.12069). *Management Science*, 46(3), 436–443.
+- Makridakis, S., Spiliotis, E., & Assimakopoulos, V. (2022). [The M5 Competition: Background, Organization, and Implementation](https://doi.org/10.1016/j.ijforecast.2021.07.007). *International Journal of Forecasting*.
