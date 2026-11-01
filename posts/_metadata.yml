@@ -1,7 +1,6 @@
 # Applies to every article in posts/
 author:
-  - name: Anup Walvekar
-    affiliation: Field Data Lab
+  - name: Field Data Lab
 citation: true
 license: "CC BY"
 number-sections: true
